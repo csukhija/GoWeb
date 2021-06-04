@@ -24,10 +24,13 @@ jobs:
     - name: Test
       run: go test -v ./...
       
+    - name: Zip the application files
+      run: Compress-Archive .\* app.zip
+
     - name: 'Deploy to Azure Web App'
       uses: azure/webapps-deploy@v2
       with:
         app-name: 'chirags'
         slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_74080824fccb4cfcbe3c67fdf8afc22f }}
-        #package: '.\app.zip'
+        publish-profile: ${{ secrets.AzureAppService_PublishProfile_cc07cb5e05d94de0883b05e02dd226b7 }}
+        package: '.\app.zip'
