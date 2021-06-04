@@ -24,15 +24,10 @@ jobs:
     - name: Test
       run: go test -v ./...
       
-    - name: Golang Pieline
-      # You may pin to the exact commit or the version.
-      # uses: shoukoo/golang-pipeline@e056a6791721d91d11f5247e881bc1c4c6f7f46c
-      uses: shoukoo/golang-pipeline@0.2.0
-
     - name: 'Deploy to Azure Web App'
       uses: azure/webapps-deploy@v2
       with:
         app-name: 'chirags'
         slot-name: 'production'
         publish-profile: ${{ secrets.AzureAppService_PublishProfile_74080824fccb4cfcbe3c67fdf8afc22f }}
-        package: '.\app.zip'
+        #package: '.\app.zip'
