@@ -2,14 +2,14 @@ name: Go
 
 on:
   push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+    branches:
+      - master
+  workflow_dispatch:
 
 jobs:
+  build-and-deploy:
+    runs-on: windows-latest
 
-  build:
-    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
 
@@ -23,3 +23,24 @@ jobs:
 
     - name: Test
       run: go test -v ./...
+      
+    - name: Set up Python version
+      uses: actions/setup-python@v1
+      with:
+        python-version: '3.6'
+
+    - name: Install Python dependencies
+      run: |
+        python -m venv env
+        .\env\Scripts\activate
+        pip install -r requirements.txt
+    - name: Zip the application files
+      run: Compress-Archive .\* app.zip
+
+    - name: 'Deploy to Azure Web App'
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: 'chirags'
+        slot-name: 'production'
+        publish-profile: ${{ secrets.AzureAppService_PublishProfile_74080824fccb4cfcbe3c67fdf8afc22f }}
+        package: '.\app.zip'
